@@ -6,24 +6,66 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
+  <!-- ===== Messages ===== -->
+
+  <!-- getItemById -->
   <message name="getItemByIdRequest">
     <part name="id" type="xsd:int"/>
   </message>
-
   <message name="getItemByIdResponse">
     <part name="id" type="xsd:int"/>
     <part name="name" type="xsd:string"/>
   </message>
+
+  <!-- getAllItems -->
+  <message name="getAllItemsRequest"/>
+  <message name="getAllItemsResponse">
+    <part name="items" type="xsd:string"/> <!-- stringified JSON or CSV -->
+  </message>
+
+  <!-- addItem -->
+  <message name="addItemRequest">
+    <part name="name" type="xsd:string"/>
+  </message>
+  <message name="addItemResponse">
+    <part name="id" type="xsd:int"/>
+    <part name="name" type="xsd:string"/>
+  </message>
+
+  <!-- deleteItem -->
+  <message name="deleteItemRequest">
+    <part name="id" type="xsd:int"/>
+  </message>
+  <message name="deleteItemResponse">
+    <part name="success" type="xsd:boolean"/>
+  </message>
+
+  <!-- ===== Port Type ===== -->
 
   <portType name="InventoryPort">
     <operation name="getItemById">
       <input message="tns:getItemByIdRequest"/>
       <output message="tns:getItemByIdResponse"/>
     </operation>
+    <operation name="getAllItems">
+      <input message="tns:getAllItemsRequest"/>
+      <output message="tns:getAllItemsResponse"/>
+    </operation>
+    <operation name="addItem">
+      <input message="tns:addItemRequest"/>
+      <output message="tns:addItemResponse"/>
+    </operation>
+    <operation name="deleteItem">
+      <input message="tns:deleteItemRequest"/>
+      <output message="tns:deleteItemResponse"/>
+    </operation>
   </portType>
+
+  <!-- ===== Binding ===== -->
 
   <binding name="InventoryBinding" type="tns:InventoryPort">
     <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
     <operation name="getItemById">
       <soap:operation soapAction="getItemById"/>
       <input>
@@ -33,11 +75,44 @@
         <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
       </output>
     </operation>
+
+    <operation name="getAllItems">
+      <soap:operation soapAction="getAllItems"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+
+    <operation name="addItem">
+      <soap:operation soapAction="addItem"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+
+    <operation name="deleteItem">
+      <soap:operation soapAction="deleteItem"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
   </binding>
+
+  <!-- ===== Service ===== -->
 
   <service name="InventoryService">
     <port name="InventoryPort" binding="tns:InventoryBinding">
       <soap:address location="http://localhost:8001/wsdl"/>
     </port>
   </service>
+
 </definitions>
