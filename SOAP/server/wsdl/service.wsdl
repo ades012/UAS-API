@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<definitions name="InventoryService"
+  targetNamespace="http://example.com/inventory"
+  xmlns:tns="http://example.com/inventory"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+  <message name="getItemByIdRequest">
+    <part name="id" type="xsd:int"/>
+  </message>
+
+  <message name="getItemByIdResponse">
+    <part name="id" type="xsd:int"/>
+    <part name="name" type="xsd:string"/>
+  </message>
+
+  <portType name="InventoryPort">
+    <operation name="getItemById">
+      <input message="tns:getItemByIdRequest"/>
+      <output message="tns:getItemByIdResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="InventoryBinding" type="tns:InventoryPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getItemById">
+      <soap:operation soapAction="getItemById"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:InventoryService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="InventoryService">
+    <port name="InventoryPort" binding="tns:InventoryBinding">
+      <soap:address location="http://localhost:8001/wsdl"/>
+    </port>
+  </service>
+</definitions>
